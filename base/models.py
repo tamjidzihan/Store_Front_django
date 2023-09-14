@@ -31,6 +31,7 @@ class Customer(models.Model):
 class Address(models.Model):
     street = models.CharField(max_length=250)
     city = models.CharField(max_length=250)
+    country = models.CharField(max_length=250,null=True)
     customer = models.OneToOneField(Customer,on_delete=models.CASCADE,primary_key=True)
 
 class Order(models.Model):
