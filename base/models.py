@@ -50,6 +50,9 @@ class Address(models.Model):
     country = models.CharField(max_length=250,null=True)
     customer = models.OneToOneField(Customer,on_delete=models.CASCADE,primary_key=True)
 
+    def __str__(self) -> str:
+        return f'{self.street} {self.city} {self.country}'
+
 class Order(models.Model):
     PAYMENT_PENDING = 'P'
     PAYMENT_COMPLETE = 'C'

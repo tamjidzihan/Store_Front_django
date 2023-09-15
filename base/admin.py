@@ -64,7 +64,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name','last_name','email','phone','date_of_birth','orders']
+    list_display = ['first_name','last_name','email','phone','address','orders']
     ordering = ['first_name','last_name']
     search_fields = ['first_name__istartswith','last_name__istartswith']
     list_per_page = 50
@@ -92,3 +92,10 @@ class OrderAdmin(admin.ModelAdmin):
     autocomplete_fields = ['customer']
     list_editable = ['payment_status']
     list_per_page = 50
+
+
+
+@admin.register(models.Address)
+class AdressAdmin(admin.ModelAdmin):
+    list_display = ['street','city','country','customer']
+    autocomplete_fields = ['customer']
