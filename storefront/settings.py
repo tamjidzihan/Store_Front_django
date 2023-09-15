@@ -86,13 +86,7 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
+#for local database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -103,6 +97,19 @@ DATABASES = {
         'PORT': '5432',        
     }
 }
+
+#for cloude database - neon
+
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'store_front',
+#     'USER': 'tamjidzihan1',
+#     'PASSWORD': '0aHKtxcur2Vk',
+#     'HOST': 'ep-fancy-wind-64929640.ap-southeast-1.aws.neon.tech',
+#     'PORT': '5432',
+#   }
+# }
 
 
 

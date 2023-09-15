@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 
+
+admin.site.site_header = 'Store Front Admin Panel'
+admin.site.index_title = 'Site Admin '
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
