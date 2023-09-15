@@ -1,6 +1,94 @@
-from django.contrib import admin
+from typing import Any
+from django.contrib import admin,messages
+from django.db.models.query import QuerySet
+from django.db.models.aggregates import Count
+from django.http.request import HttpRequest
+from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.html import format_html
 from . import models
 
 # Register your models here.
-admin.site.register(models.Catagory)
-admin.site.register(models.Product)
+
+@admin.register(models.Catagory)
+class CaragoryAdmin(admin.ModelAdmin):
+    list_display = ['title','product_count','feature_product']
+    autocomplete_fields = ['feature_product']
+    search_fields = ['title']
+
+    @admin.display(ordering='product_count')
+    def product_count(self,catagory):
+        url = (
+            reverse('admin:base_product_changelist') 
+            + '?'
+            +urlencode({
+                'catagory__id': str(catagory.id)
+            })
+            )
+        return format_html('<a href ="{}" >{}</a>',url,catagory.product_count)
+        
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(product_count = Count('product'))
+
+@admin.register(models.Product)
+class ProductAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['catagory']
+    actions = ['clear_inventory']
+    list_display = ['title','price','inventory','catagory','inventory_status']
+    list_editable = ['price','inventory']
+    list_filter = ['catagory','last_update']
+    list_select_related = ['catagory']
+    search_fields = ['title__istartswith']
+    list_per_page = 50
+
+    def catagory(self,prodect):
+        return prodect.catagory.title
+
+    @admin.display(ordering = 'inventory')
+    def inventory_status(self, product):
+        if product.inventory < 10:
+            return 'Low'
+        return 'OK'
+    
+    @admin.action(description='Clear Inventory(On selected product)')
+    def clear_inventory(self,request,queryset):
+        updated_count = queryset.update(inventory = 0)
+        self.message_user(
+            request,
+            f'{updated_count} products inventory were successfully Deleted',
+            messages.SUCCESS
+        )
+
+
+
+@admin.register(models.Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ['first_name','last_name','email','phone','date_of_birth','orders']
+    ordering = ['first_name','last_name']
+    search_fields = ['first_name__istartswith','last_name__istartswith']
+    list_per_page = 50
+
+    @admin.display(ordering='order_count')
+    def orders(self,customer):
+        url = (
+            reverse('admin:base_order_changelist')
+            +'?'
+            +urlencode({
+                'customer_id': str(customer.id)
+            })
+        )
+        return format_html('<a href="{}">{}</a>',url,customer.order_count)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(order_count = Count('order'))
+
+
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id','placed_at','customer','payment_status']
+    autocomplete_fields = ['customer']
+    list_editable = ['payment_status']
+    list_per_page = 50
