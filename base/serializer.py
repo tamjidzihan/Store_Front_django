@@ -20,12 +20,22 @@ class ProductSerializer(ModelSerializer):
         fields = ['id','title','price','price_with_tax','description','catagory']
 
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
-    catagory = serializers.HyperlinkedRelatedField(
-        queryset = Catagory.objects.all(),
-        view_name= 'catagory-detail'
-    )
+    catagory =serializers.StringRelatedField() 
+    # catagory = serializers.HyperlinkedRelatedField(
+    #     queryset = Catagory.objects.all(),
+    #     view_name= 'catagory-detail'
+    # )
 
     def calculate_tax(self,product:Product):
         return product.price * Decimal(1.1)
+    
+    
 
     
+
+# __________________________________
+# def validate(self, data):
+#     if data['password'] != data['confirm_password']:
+#         return serializers.ValidationError('Pass word do not match')
+#     return data
+# ____________________________________
