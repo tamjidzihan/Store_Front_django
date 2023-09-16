@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    "debug_toolbar",
+    'rest_framework',
+    'debug_toolbar',
 
     'base'
 ]
@@ -86,31 +87,30 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#for local database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecom',
-        'USER': 'postgres',
-        'PASSWORD': 'tamjid2014',
-        'HOST': 'localhost',
-        'PORT': '5432',        
-    }
-}
+# #for local database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'ecom',
+#         'USER': 'postgres',
+#         'PASSWORD': 'tamjid2014',
+#         'HOST': 'localhost',
+#         'PORT': '5432',        
+#     }
+# }
 
 #for cloude database - neon
 
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql',
-#     'NAME': 'store_front',
-#     'USER': 'tamjidzihan1',
-#     'PASSWORD': '0aHKtxcur2Vk',
-#     'HOST': 'ep-fancy-wind-64929640.ap-southeast-1.aws.neon.tech',
-#     'PORT': '5432',
-#   }
-# }
-
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'ecom',
+    'USER': 'tamjidzihan1',
+    'PASSWORD': 'FvfCpEGD65ko',
+    'HOST': 'ep-long-cherry-40253582.ap-southeast-1.aws.neon.tech',
+    'PORT': '5432',
+  }
+}
 
 
 # Password validation

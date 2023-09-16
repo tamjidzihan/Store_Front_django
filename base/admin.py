@@ -34,8 +34,7 @@ class CaragoryAdmin(admin.ModelAdmin):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     autocomplete_fields = ['catagory']
-    actions = ['clear_inventory']
-    list_display = ['title','price','inventory','catagory','inventory_status']
+    list_display = ['title','price','inventory','catagory','inventory_status','like']
     list_editable = ['price','inventory']
     list_filter = ['catagory','last_update']
     list_select_related = ['catagory']
@@ -51,6 +50,8 @@ class ProductAdmin(admin.ModelAdmin):
             return 'Low'
         return 'OK'
     
+
+    actions = ['clear_inventory']
     @admin.action(description='Clear Inventory(On selected product)')
     def clear_inventory(self,request,queryset):
         updated_count = queryset.update(inventory = 0)
@@ -97,5 +98,18 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(models.Address)
 class AdressAdmin(admin.ModelAdmin):
-    list_display = ['street','city','country','customer']
+    list_display = ['customer','street','city','country']
     autocomplete_fields = ['customer']
+
+
+
+@admin.register(models.Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ['like','product']
+    autocomplete_fields = ['product']
+
+
+
+@admin.register(models.Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ['created_at']

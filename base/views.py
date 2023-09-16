@@ -1,8 +1,20 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import *
+from.serializer import *
 
 # Create your views here.
 
+@api_view()
+def product_list(request):
+    return Response('ok')
 
-def say_hello(request):
-    return render(request,'index.html',{'name':'Zihan'})
+
+@api_view()
+def product_detail(request,id):
+    product =  Product.objects.get(pk = id)
+    serializer = ProductSerializer(product)
+    print(serializer.fields)
+    return Response(serializer.data)

@@ -30,6 +30,9 @@ class Like(models.Model):
     like = models.PositiveSmallIntegerField()
     product = models.OneToOneField(Product,on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return str(self.like)
+
 class Customer(models.Model):
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
