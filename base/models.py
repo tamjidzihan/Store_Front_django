@@ -70,11 +70,16 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES,default=PAYMENT_PENDING)
     customer = models.ForeignKey(Customer,on_delete=models.PROTECT)
 
+    def __str__(self) -> str:
+        return f'{self.customer.first_name} {self.customer.last_name}'
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete=models.PROTECT)
     product = models.ForeignKey(Product,on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField()
-    unite_price = models.DecimalField(max_digits=7,decimal_places=2)
+
+    def __str__(self) -> str:
+        return f'{self.order}   :   {self.product.title} '
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)

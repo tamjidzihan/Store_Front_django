@@ -89,11 +89,24 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id','placed_at','customer','payment_status']
+    list_display = ['id','customer','placed_at','payment_status']
     autocomplete_fields = ['customer']
     list_editable = ['payment_status']
     list_per_page = 50
 
+
+
+@admin.register(models.OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['id','product','quantity','product_price','total_price']
+    
+    def product_price(self,orderitem):
+        return orderitem.product.price
+    
+    def total_price(self,orderitem):
+        return (orderitem.product.price * orderitem.quantity)
+
+   
 
 
 @admin.register(models.Address)

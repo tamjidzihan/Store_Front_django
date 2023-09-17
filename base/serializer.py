@@ -17,10 +17,10 @@ class CatagorySerializer(ModelSerializer):
 class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id','title','price','price_with_tax','description','catagory']
+        fields = ['id','title','slug','inventory','price','price_with_tax','description','catagory']
 
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
-    catagory =serializers.StringRelatedField() 
+    # catagory =serializers.StringRelatedField() 
     # catagory = serializers.HyperlinkedRelatedField(
     #     queryset = Catagory.objects.all(),
     #     view_name= 'catagory-detail'
