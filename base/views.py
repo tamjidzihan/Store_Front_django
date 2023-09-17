@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models.aggregates import Count
 from rest_framework import status
 from .models import *
 from.serializer import *
@@ -50,7 +51,7 @@ def product_detail(request,pk):
 @api_view(['GET','POST'])
 def catagoty_list(request):
         if request.method == 'GET':
-                queryset = Catagory.objects.all()
+                queryset = Catagory.objects.annotate(product_count = Count('product')).all()
                 serializer = CatagorySerializer(queryset,many = True,context={'request': request})
                 return Response(serializer.data)
         elif request.method == 'POST':
@@ -63,7 +64,7 @@ def catagoty_list(request):
 
 @api_view(['GET','PUT','DELETE'])
 def catagoty_detail(request,pk):
-        catagory = get_object_or_404(Catagory, pk=pk)
+        catagory = get_object_or_404(Catagory.objects.annotate(product_count = Count('product')), pk=pk)
         if request.method == 'GET':
                 serializer = CatagorySerializer(catagory)
                 return Response(serializer.data)

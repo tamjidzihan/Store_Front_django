@@ -8,10 +8,13 @@ from .models import *
 class CatagorySerializer(ModelSerializer):
     class Meta:
         model = Catagory
-        fields = ['id','title','feature_product']
+        fields = ['id','title','feature_product','product_count']
+        read_only_fields = ['product_count']
     
     feature_product = serializers.StringRelatedField()
+    product_count =  serializers.IntegerField(read_only=True)
 
+    
 
 
 class ProductSerializer(ModelSerializer):
