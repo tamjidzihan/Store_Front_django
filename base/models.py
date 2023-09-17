@@ -54,7 +54,7 @@ class Address(models.Model):
     customer = models.OneToOneField(Customer,on_delete=models.CASCADE,primary_key=True)
 
     def __str__(self) -> str:
-        return f'{self.street} {self.city} {self.country}'
+        return f'{self.street}, {self.city}, {self.country}'
 
 class Order(models.Model):
     PAYMENT_PENDING = 'P'
@@ -75,11 +75,11 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete=models.PROTECT)
-    product = models.ForeignKey(Product,on_delete=models.PROTECT)
+    product = models.ForeignKey(Product,on_delete=models.PROTECT,related_name='orderitem')
     quantity = models.PositiveSmallIntegerField()
 
     def __str__(self) -> str:
-        return f'{self.order}   :   {self.product.title} '
+        return self.product.title
 
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)

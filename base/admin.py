@@ -89,11 +89,13 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id','customer','placed_at','payment_status']
+    list_display = ['id','customer','placed_at','payment_status','order_item']
     autocomplete_fields = ['customer']
     list_editable = ['payment_status']
     list_per_page = 50
 
+    def order_item(self,order):
+        return reverse('admin:base_orderitem_changelist')
 
 
 @admin.register(models.OrderItem)

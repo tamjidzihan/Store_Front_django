@@ -28,7 +28,6 @@ def product_list(request):
         
 
 
-
 @api_view(['GET','PUT','DELETE'])
 def product_detail(request,pk):
         product = get_object_or_404(Product, pk=pk)
@@ -41,23 +40,45 @@ def product_detail(request,pk):
               serializer.save()
               return Response(serializer.data,status=status.HTTP_201_CREATED)
         elif request.method == 'DELETE':
-              if product.orderitem_set.count()>0:
-                    return Response({'error':f'Product can not be deleted.Product is on order. Product id : {pk}' },status=status.HTTP_405_METHOD_NOT_ALLOWED)
+              if product.orderitem.count()>0:
+                    return Response({'error':f'Product can not be deleted.Because Product is on orderitem.' },status=status.HTTP_405_METHOD_NOT_ALLOWED)
               product.delete()
               return Response({'Deleted Product id': pk},status=status.HTTP_204_NO_CONTENT)
 
    
 
-@api_view()
+@api_view(['GET','POST'])
 def catagoty_list(request):
-        queryset = Catagory.objects.all()
-        serializer = CatagorySerializer(queryset,many = True,context={'request': request})
-        return Response(serializer.data)
+        if request.method == 'GET':
+                queryset = Catagory.objects.all()
+                serializer = CatagorySerializer(queryset,many = True,context={'request': request})
+                return Response(serializer.data)
+        elif request.method == 'POST':
+                serializer = CatagorySerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 
 
-@api_view()
+@api_view(['GET','PUT','DELETE'])
 def catagoty_detail(request,pk):
         catagory = get_object_or_404(Catagory, pk=pk)
-        serializer = CatagorySerializer(catagory)
-        return Response(serializer.data)
+        if request.method == 'GET':
+                serializer = CatagorySerializer(catagory)
+                return Response(serializer.data)
+        elif request.method == 'PUT':
+               serializer = CatagorySerializer(catagory,data=request.data)
+               serializer.is_valid(raise_exception=True)
+               serializer.save()
+               return Response(serializer.data,status=status.HTTP_201_CREATED)
+        elif request.method == 'DELETE':
+               if catagory.product_set.count() >0:
+                      return Response({'error':f'Catagory can not be deleted.Because it has Some product on it.' },status=status.HTTP_405_METHOD_NOT_ALLOWED)
+               else:
+                      catagory.delete()
+                      return Response({'Deleted Catagory id': pk},status=status.HTTP_204_NO_CONTENT)
+
+              
+
+
