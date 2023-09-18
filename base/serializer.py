@@ -4,37 +4,26 @@ from decimal import Decimal
 from .models import *
 
 
-
 class CatagorySerializer(ModelSerializer):
     class Meta:
         model = Catagory
-        fields = ['id','title','feature_product','product_count']
-        read_only_fields = ['product_count']
-    
-    feature_product = serializers.StringRelatedField()
-    product_count =  serializers.IntegerField(read_only=True)
+        fields = ["id", "title", "feature_product", "product_count"]
+        read_only_fields = ["product_count"]
 
-    
+    feature_product = serializers.StringRelatedField()
+    product_count = serializers.IntegerField(read_only=True)
 
 
 class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id','title','slug','inventory','price','price_with_tax','description','catagory']
+        fields = ["id","title","slug","inventory","price","price_with_tax","description","catagory",]
 
-    price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
-    # catagory =serializers.StringRelatedField() 
-    # catagory = serializers.HyperlinkedRelatedField(
-    #     queryset = Catagory.objects.all(),
-    #     view_name= 'catagory-detail'
-    # )
+    price_with_tax = serializers.SerializerMethodField(method_name="calculate_tax")
 
-    def calculate_tax(self,product:Product):
+    def calculate_tax(self, product: Product):
         return product.price * Decimal(1.1)
-    
-    
 
-    
 
 # __________________________________
 # def validate(self, data):
