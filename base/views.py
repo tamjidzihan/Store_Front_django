@@ -12,11 +12,11 @@ from .serializer import *
 
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, "index.html",{'name':'zihan'})
 
 
 class ProductList(ListCreateAPIView):
-    queryset = Product.objects.select_related("catagory").all()
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     def get_serializer_context(self):
@@ -57,6 +57,13 @@ class CatagoryDetail(RetrieveUpdateDestroyAPIView):
         return Response({"Deleted Catagory id": pk}, status=status.HTTP_204_NO_CONTENT)
 
                                           
+
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 from django.db import models
-
+from uuid import uuid4
 
 class Catagory(models.Model):
     title = models.CharField(max_length=250)
@@ -82,6 +82,7 @@ class OrderItem(models.Model):
         return self.product.title
 
 class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class CartItem(models.Model):
