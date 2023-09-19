@@ -1,9 +1,10 @@
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-
-from django.shortcuts import render, get_object_or_404
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+#####################################################################################
+from django.shortcuts import render, get_object_or_404
+from rest_framework.viewsets import ModelViewSet,ReadOnlyModelViewSet
 from rest_framework.response import Response
 from django.db.models.aggregates import Count
 from rest_framework import status
@@ -15,62 +16,42 @@ def index(request):
     return render(request, "index.html",{'name':'zihan'})
 
 
-class ProductList(ListCreateAPIView):
+
+class ProducViewset(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
     def get_serializer_context(self):
         return {"request": self.request}
+    
+    def destroy(self, request, *args, **kwargs):
+         if OrderItem.objects.filter(product_id = kwargs['pk']).count() > 0:
+            return Response({"error": f"Product can not be deleted.Because Product is on orderitem."},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+         return super().destroy(request, *args, **kwargs)
+    
 
 
-class ProductDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    # lookup_field = 'id'
-
-    def delete(self, request, pk):
-        product = get_object_or_404(Product, pk=pk)
-        if product.orderitem.count() > 0:
-            return Response({"error": f"Product can not be deleted.Because Product is on orderitem."},status=status.HTTP_405_METHOD_NOT_ALLOWED,)
-        product.delete()
-        return Response({"Product Deleted id": pk}, status=status.HTTP_204_NO_CONTENT)
-
-
-class CatagoryList(ListCreateAPIView):
+class CatagoryViewset(ModelViewSet):
     queryset = Catagory.objects.annotate(product_count=Count("product")).all()
     serializer_class = CatagorySerializer
 
     def get_serializer_context(self):
         return {"request": self.request}
-
-
-class CatagoryDetail(RetrieveUpdateDestroyAPIView):
-    queryset =  Catagory.objects.annotate(product_count=Count("product"))
-    serializer_class = CatagorySerializer
-
-    def delete(self, request,pk):
-        catagory = get_object_or_404(
-        Catagory.objects.annotate(product_count=Count("product")), pk=pk)
-        if catagory.product_set.count() > 0:
-            return Response({"error": f"Catagory can not be deleted.Because it has Some product on it."},status=status.HTTP_405_METHOD_NOT_ALLOWED,)
-        catagory.delete()
-        return Response({"Deleted Catagory id": pk}, status=status.HTTP_204_NO_CONTENT)
-
-                                          
+    
+    def destroy(self, request, *args, **kwargs):
+        if Product.objects.filter(catagory_id = kwargs['pk']):
+            return Response({"error": f"Catagory can not be deleted.Because it has Some product on it."},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return super().destroy(request, *args, **kwargs)
 
 
 
 
+class LikeViewset(ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
 
-
-
-
-
-
-
-
-
-
+    def get_parser_context(self):
+        return {'request':self.request}
 
 
 
@@ -200,3 +181,61 @@ class CatagoryDetail(RetrieveUpdateDestroyAPIView):
 #             )
 #         product.delete()
 #         return Response({"Product Deleted id": pk}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+#------------old code(ListCreateAPIView,RetrieveUpdateDestroyAPIView)------------------
+
+
+
+
+# class ProductList(ListCreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+
+#     def get_serializer_context(self):
+#         return {"request": self.request}
+
+
+
+
+# class ProductDetail(RetrieveUpdateDestroyAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#     # lookup_field = 'id'
+
+#     def delete(self, request, pk):
+#         product = get_object_or_404(Product, pk=pk)
+#         if product.orderitem.count() > 0:
+#             return Response({"error": f"Product can not be deleted.Because Product is on orderitem."},status=status.HTTP_405_METHOD_NOT_ALLOWED,)
+#         product.delete()
+#         return Response({"Product Deleted id": pk}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+# class CatagoryList(ListCreateAPIView):
+#     queryset = Catagory.objects.annotate(product_count=Count("product")).all()
+#     serializer_class = CatagorySerializer
+
+#     def get_serializer_context(self):
+#         return {"request": self.request}
+
+
+# class CatagoryDetail(RetrieveUpdateDestroyAPIView):
+#     queryset =  Catagory.objects.annotate(product_count=Count("product"))
+#     serializer_class = CatagorySerializer
+
+#     def delete(self, request,pk):
+#         catagory = get_object_or_404(
+#         Catagory.objects.annotate(product_count=Count("product")), pk=pk)
+#         if catagory.product_set.count() > 0:
+#             return Response({"error": f"Catagory can not be deleted.Because it has Some product on it."},status=status.HTTP_405_METHOD_NOT_ALLOWED,)
+#         catagory.delete()
+#         return Response({"Deleted Catagory id": pk}, status=status.HTTP_204_NO_CONTENT)

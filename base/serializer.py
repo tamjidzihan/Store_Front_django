@@ -31,3 +31,12 @@ class ProductSerializer(ModelSerializer):
 #         return serializers.ValidationError('Pass word do not match')
 #     return data
 # ____________________________________
+
+
+class LikeSerializer(ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id','date','like','product']
+
+
+

@@ -27,8 +27,9 @@ class Product(models.Model):
 
 
 class Like(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='like')
     like = models.PositiveSmallIntegerField()
-    product = models.OneToOneField(Product,on_delete=models.CASCADE)
+    date =  models.DateField(auto_now_add=True)
 
     def __str__(self) -> str:
         return str(self.like)
