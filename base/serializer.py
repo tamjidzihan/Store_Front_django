@@ -36,7 +36,11 @@ class ProductSerializer(ModelSerializer):
 class LikeSerializer(ModelSerializer):
     class Meta:
         model = Like
-        fields = ['id','date','like','product']
+        fields = ['id','date','like','customer']
+
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return Like.objects.create(product_id = product_id,**validated_data)
 
 
 

@@ -34,7 +34,7 @@ class CaragoryAdmin(admin.ModelAdmin):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     autocomplete_fields = ['catagory']
-    list_display = ['title','price','inventory','catagory','inventory_status','like']
+    list_display = ['title','price','inventory','catagory','inventory_status']
     list_editable = ['price','inventory']
     list_filter = ['catagory','last_update']
     list_select_related = ['catagory']
@@ -120,8 +120,9 @@ class AdressAdmin(admin.ModelAdmin):
 
 @admin.register(models.Like)
 class LikeAdmin(admin.ModelAdmin):
-    list_display = ['like','product']
-    autocomplete_fields = ['product']
+    list_display = ['id','customer','product','like']
+    autocomplete_fields = ['product','customer']
+
 
 
 

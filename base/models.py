@@ -28,6 +28,7 @@ class Product(models.Model):
 
 class Like(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='like')
+    customer = models.ForeignKey('Customer',on_delete=models.SET_NULL,related_name='+',null = True,blank= True)
     like = models.PositiveSmallIntegerField()
     date =  models.DateField(auto_now_add=True)
 

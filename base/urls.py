@@ -1,17 +1,24 @@
 from django.urls import path,include
-from rest_framework.routers import SimpleRouter,DefaultRouter
+from rest_framework_nested import routers
 from . import views
 
 
-router = SimpleRouter()
-router.register('products',views.ProducViewset)
+
+
+router =routers.DefaultRouter()
+router.register('products',views.ProducViewset,basename='products')
 router.register('catagory',views.CatagoryViewset)
+
+product_router =  routers.NestedDefaultRouter(router,'products',lookup = 'product')
+product_router.register('like',views.LikeViewset,basename='product-like')
+
 
 
 urlpatterns = [
     path('', views.index),
-    path('',include(router.urls))
-    
+    path('',include(router.urls)),
+    path('',include(product_router.urls)),
+ 
 ]
 
 

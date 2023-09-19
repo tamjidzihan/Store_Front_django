@@ -18,8 +18,15 @@ def index(request):
 
 
 class ProducViewset(ModelViewSet):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        catagory_id = self.request.query_params.get('catagory_id')
+        if catagory_id is not None:
+            queryset = queryset.filter(catagory_id = catagory_id)
+        return queryset
+
 
     def get_serializer_context(self):
         return {"request": self.request}
@@ -47,11 +54,17 @@ class CatagoryViewset(ModelViewSet):
 
 
 class LikeViewset(ModelViewSet):
-    queryset = Like.objects.all()
     serializer_class = LikeSerializer
 
-    def get_parser_context(self):
-        return {'request':self.request}
+    def get_queryset(self):
+        return Like.objects.filter(product_id = self.kwargs['product_pk'])
+
+
+    def get_serializer_context(self):
+        return {'product_id':self.kwargs['product_pk']}
+
+    # def get_serializer_context(self):
+    #     return {"request": self.request}
 
 
 
