@@ -8,16 +8,21 @@ from . import views
 router =routers.DefaultRouter()
 router.register('products',views.ProducViewset,basename='products')
 router.register('catagory',views.CatagoryViewset)
+router.register('cart',views.CartViewset,basename='cart')
 
 product_router =  routers.NestedDefaultRouter(router,'products',lookup = 'product')
 product_router.register('like',views.LikeViewset,basename='product-like')
 
+cart_router = routers.NestedDefaultRouter(router,'cart',lookup = 'cart')
+cart_router.register('caritem',views.CartItemSerializer,basename='cart-item')
 
 
 urlpatterns = [
     path('', views.index),
     path('',include(router.urls)),
     path('',include(product_router.urls)),
+
+
  
 ]
 

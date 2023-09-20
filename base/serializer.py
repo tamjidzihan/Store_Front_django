@@ -36,7 +36,7 @@ class ProductSerializer(ModelSerializer):
 class LikeSerializer(ModelSerializer):
     class Meta:
         model = Like
-        fields = ['id','date','like','customer']
+        fields = ['id','date','like','customer','product']
 
     def create(self, validated_data):
         product_id = self.context['product_id']
@@ -44,3 +44,14 @@ class LikeSerializer(ModelSerializer):
 
 
 
+
+class CartSerializer(ModelSerializer):
+    class Meta:
+        model= Cart
+        fields = ['id']
+
+
+class CartItemSerializer(ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['id','cart','product','quantity']

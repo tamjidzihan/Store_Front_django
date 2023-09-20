@@ -128,4 +128,4 @@ class LikeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ['created_at']
+    list_display = ['id','created_at']

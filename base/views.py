@@ -3,11 +3,18 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 #####################################################################################
+
+
+
+from django.db.models.aggregates import Count
 from django.shortcuts import render, get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.viewsets import ModelViewSet,ReadOnlyModelViewSet
 from rest_framework.response import Response
-from django.db.models.aggregates import Count
 from rest_framework import status
+from .paginations import *
+from .filters import *
 from .models import *
 from .serializer import *
 
@@ -18,14 +25,13 @@ def index(request):
 
 
 class ProducViewset(ModelViewSet):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-    def get_queryset(self):
-        queryset = Product.objects.all()
-        catagory_id = self.request.query_params.get('catagory_id')
-        if catagory_id is not None:
-            queryset = queryset.filter(catagory_id = catagory_id)
-        return queryset
+    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+    filterset_class = ProductFilter
+    pagination_class = DefaultPagination
+    ordering_fields = ['id','price','last_update']
+    search_fields = ['title']
 
 
     def get_serializer_context(self):
@@ -63,10 +69,18 @@ class LikeViewset(ModelViewSet):
     def get_serializer_context(self):
         return {'product_id':self.kwargs['product_pk']}
 
-    # def get_serializer_context(self):
-    #     return {"request": self.request}
 
 
+
+
+class CartViewset(ModelViewSet):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+
+
+class CartItemViewset(ModelViewSet):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
 
 
 
