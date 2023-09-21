@@ -10,7 +10,8 @@ from django.db.models.aggregates import Count
 from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter,OrderingFilter
-from rest_framework.viewsets import ModelViewSet,ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet,GenericViewSet
+from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.response import Response
 from rest_framework import status
 from .paginations import *
@@ -73,14 +74,30 @@ class LikeViewset(ModelViewSet):
 
 
 
-class CartViewset(ModelViewSet):
-    queryset = Cart.objects.all()
+class CartViewset(CreateModelMixin,
+                  RetrieveModelMixin,
+                  DestroyModelMixin,
+                  GenericViewSet):
+    queryset = Cart.objects.prefetch_related('cartitem_set__product').all()
     serializer_class = CartSerializer
 
+    
 
 class CartItemViewset(ModelViewSet):
-    queryset = CartItem.objects.all()
-    serializer_class = CartItemSerializer
+
+    def get_parser_context(self, http_request):
+        return {'cart_id':self.kwargs['cart_pk']}
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AddCartItemSerializer
+        return CartItemSerializer
+
+    def get_queryset(self):
+        return CartItem.objects.filter(cart_id = self.kwargs['cart_pk']).select_related('product')
+    
+    def get_serializer_context(self):
+        return {'cart_id':self.kwargs['cart_pk']}
 
 
 

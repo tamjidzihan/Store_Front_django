@@ -129,3 +129,10 @@ class LikeAdmin(admin.ModelAdmin):
 @admin.register(models.Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ['id','created_at']
+
+
+
+@admin.register(models.CartItem)
+class CartItem(admin.ModelAdmin):
+    list_display = ['id','cart','product','quantity']
+    autocomplete_fields = ['product']
