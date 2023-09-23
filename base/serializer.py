@@ -43,20 +43,21 @@ class LikeSerializer(ModelSerializer):
         return Like.objects.create(product_id = product_id,**validated_data)
 
 
-
-class CartItemProduct(ModelSerializer):
+#custom serializers----------------------------------->
+class CartItemProductSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = ['title','price']
 
 
-
+#custom serializers----------------------------------->
 class AddCartItemSerializer(ModelSerializer):
     product_id = serializers.IntegerField()
 
     def validate_product_id(self, value):
         if not Product.objects.filter(pk = value).exists():
             raise serializers.ValidationError('Invalide query')
+        return value
 
 
     def save(self, **kwargs):
@@ -70,7 +71,10 @@ class AddCartItemSerializer(ModelSerializer):
             cart_item.save()
             self.instance = cart_item
         except CartItem.DoesNotExist:
-            self.instance = CartItem.objects.create(cart_id = cart_id,**self.validated_data)
+            self.instance = CartItem.objects.create(
+                cart_id = cart_id,
+                product_id=product_id,
+                quantity = quantity)
         return self.instance
 
 
@@ -78,10 +82,16 @@ class AddCartItemSerializer(ModelSerializer):
         model = CartItem
         fields = ['id','product_id','quantity']
 
+#custom serializers----------------------------------->
+class UpdateCartItemSerializer(ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
+
 
 
 class CartItemSerializer(ModelSerializer):
-    product = CartItemProduct()
+    product = CartItemProductSerializer()
     product_total_price = serializers.SerializerMethodField(method_name='calculate_total_price')
 
     def calculate_total_price(self,cart_item:CartItem):

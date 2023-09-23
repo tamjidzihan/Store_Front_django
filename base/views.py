@@ -5,7 +5,6 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 #####################################################################################
 
 
-
 from django.db.models.aggregates import Count
 from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -84,13 +83,13 @@ class CartViewset(CreateModelMixin,
     
 
 class CartItemViewset(ModelViewSet):
-
-    def get_parser_context(self, http_request):
-        return {'cart_id':self.kwargs['cart_pk']}
+    http_method_names = ['get','post','patch','delete']
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return AddCartItemSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateCartItemSerializer
         return CartItemSerializer
 
     def get_queryset(self):

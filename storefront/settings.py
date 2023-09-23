@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'debug_toolbar',
 
-    'base'
+    'base',
+    'core'
+
 ]
 
 MIDDLEWARE = [
@@ -53,8 +55,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', 
 ]
 
 
@@ -101,7 +102,6 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 # }
 
 #for cloude database - neon
-
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
@@ -112,6 +112,10 @@ DATABASES = {
     'PORT': '5432',
   }
 }
+
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -159,4 +163,4 @@ REST_FRAMEWORK = {
 }
 
 
-
+AUTH_USER_MODEL = 'core.User'

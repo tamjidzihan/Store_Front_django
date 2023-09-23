@@ -49,6 +49,7 @@ VALUES
     ('Edward', 'Gonzalez', 'edwardgonzalez@example.com', '+1-555-777-9876', '1989-11-11'),
     ('Brian', 'Brown', 'brianbrown@example.com', '+1-555-123-9876', '1983-02-08'),
     ('Margaret', 'Hernandez', 'margarethernandez@example.com', '+1-555-555-7890', '1997-09-09'),
+    ('Tamjid', 'Islam', 'tamjidzihan@example.com', '+88-0174-6963565', '1993-12-03'),
     ('Christopher', 'Davis', 'christopherdavis@example.com', '+1-555-999-3456', '1986-04-30');
 
 
