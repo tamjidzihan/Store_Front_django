@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib import admin
 from uuid import uuid4
 
 
@@ -42,10 +43,11 @@ class Customer(models.Model):
     date_of_birth = models.DateField(null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
 
-
+    @admin.display(ordering='user__first_name')
     def first_name(self):
         return self.user.first_name
-    
+        
+    @admin.display(ordering='user__last_name')
     def last_name(self):
         return self.user.last_name
     
@@ -84,6 +86,14 @@ class Order(models.Model):
 
     def __str__(self) -> str:
         return f'{self.customer.first_name} {self.customer.last_name}'
+    
+
+    class Meta:
+        permissions = [
+            ('cancel_order','Can Cancel Order')
+        ]
+
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete=models.PROTECT)
