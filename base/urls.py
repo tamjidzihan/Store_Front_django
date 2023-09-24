@@ -22,8 +22,6 @@ urlpatterns = [
     path('',include(router.urls)),
     path('',include(product_router.urls)),
     path('',include(cart_router.urls)),
-
-
  
 ]
 
