@@ -122,6 +122,11 @@ class CartSerializer(ModelSerializer):
         fields = ['id','cartitem_set','cart_item_total_price']
 
 
+
+class CustomerSerializer(ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['id','user_id','phone','date_of_birth']
     
 
 

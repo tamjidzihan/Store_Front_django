@@ -100,6 +100,14 @@ class CartItemViewset(ModelViewSet):
 
 
 
+class CustomerViwset(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+
+
+
+
 
 # +++++++++++++++++++++++++OLD CODE++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
