@@ -15,6 +15,7 @@ from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyMod
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.response import Response
 from rest_framework import status
+from .permissions import IsAdminOrReadOnly
 from .paginations import *
 from .filters import *
 from .models import *
@@ -32,6 +33,7 @@ class ProducViewset(ModelViewSet):
     filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class = ProductFilter
     pagination_class = DefaultPagination
+    permission_classes = [IsAdminOrReadOnly]
     ordering_fields = ['id','price','last_update']
     search_fields = ['title']
 
@@ -49,6 +51,7 @@ class ProducViewset(ModelViewSet):
 class CatagoryViewset(ModelViewSet):
     queryset = Catagory.objects.annotate(product_count=Count("product")).all()
     serializer_class = CatagorySerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_context(self):
         return {"request": self.request}
