@@ -103,9 +103,6 @@ class CartItemSerializer(ModelSerializer):
 
 
 
-
-
-
 class CartSerializer(ModelSerializer):
     cartitem_set = CartItemSerializer(read_only = True,many =True)
     id = serializers.UUIDField(read_only = True)
@@ -124,6 +121,7 @@ class CartSerializer(ModelSerializer):
 
 
 class CustomerSerializer(ModelSerializer):
+    user_id = serializers.IntegerField(read_only = True)
     class Meta:
         model = Customer
         fields = ['id','user_id','phone','date_of_birth']
