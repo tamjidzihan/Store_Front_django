@@ -14,9 +14,13 @@ router.register('customer',views.CustomerViwset)
 
 product_router =  routers.NestedDefaultRouter(router,'products',lookup = 'product')
 product_router.register('like',views.LikeViewset,basename='product-like')
+product_router.register('images',views.ProducImageViewset,basename='product-image')
+
 
 cart_router = routers.NestedDefaultRouter(router,'cart',lookup = 'cart')
 cart_router.register('cartitem',views.CartItemViewset,basename='cart-item')
+
+
 
 
 urlpatterns = [

@@ -21,7 +21,10 @@ from django.urls import path,include
 
 
 admin.site.site_header = 'Store Front Admin Panel'
-admin.site.index_title = 'Site Admin '
+admin.site.index_title = 'Store Front Site Administration'
+
+admin.site.site_title = 'Store Front'
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

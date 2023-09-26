@@ -46,7 +46,12 @@ class ProducViewset(ModelViewSet):
             return Response({"error": f"Product can not be deleted.Because Product is on orderitem."},status=status.HTTP_405_METHOD_NOT_ALLOWED)
          return super().destroy(request, *args, **kwargs)
     
+class ProducImageViewset(ModelViewSet):
+    serializer_class = ProductImageSerializer
+    http_method_names = ['get','post','patch','delete']
 
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id = self.kwargs['product_pk']).select_related('product')
 
 class CatagoryViewset(ModelViewSet):
     queryset = Catagory.objects.annotate(product_count=Count("product")).all()

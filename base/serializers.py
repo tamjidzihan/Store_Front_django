@@ -25,6 +25,11 @@ class ProductSerializer(ModelSerializer):
         return product.price * Decimal(1.1)
 
 
+class ProductImageSerializer(ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields =  ['id','image']
+
 # __________________________________
 # def validate(self, data):
 #     if data['password'] != data['confirm_password']:
