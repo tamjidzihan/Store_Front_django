@@ -14,10 +14,28 @@ class CatagorySerializer(ModelSerializer):
     product_count = serializers.IntegerField(read_only=True)
 
 
+
+class ProductImageSerializer(ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields =  ['id','image']
+
+    def validate_product_id(self, value):
+        if not Product.objects.filter(pk = value).exists():
+            raise serializers.ValidationError('Invalide query')
+        return value
+    
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return ProductImage.objects.create(product_id = product_id,**validated_data)
+
+
+
 class ProductSerializer(ModelSerializer):
+    images = ProductImageSerializer(many = True,read_only= True)
     class Meta:
         model = Product
-        fields = ["id","title","slug","inventory","price","price_with_tax","description","catagory"]
+        fields = ["id","title","slug","inventory","price","price_with_tax","description","catagory","images"]
 
     price_with_tax = serializers.SerializerMethodField(method_name="calculate_tax")
 
@@ -25,10 +43,9 @@ class ProductSerializer(ModelSerializer):
         return product.price * Decimal(1.1)
 
 
-class ProductImageSerializer(ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields =  ['id','image']
+
+
+
 
 # __________________________________
 # def validate(self, data):

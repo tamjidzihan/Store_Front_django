@@ -34,9 +34,6 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='base/images')
 
 
-
-
-
 class Like(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='like')
     customer = models.ForeignKey('Customer',on_delete=models.SET_NULL,related_name='+',null = True,blank= True)

@@ -28,7 +28,7 @@ def index(request):
 
 
 class ProducViewset(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related('images').all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class = ProductFilter
@@ -36,7 +36,7 @@ class ProducViewset(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     ordering_fields = ['id','price','last_update']
     search_fields = ['title']
-
+    
 
     def get_serializer_context(self):
         return {"request": self.request}
@@ -48,10 +48,14 @@ class ProducViewset(ModelViewSet):
     
 class ProducImageViewset(ModelViewSet):
     serializer_class = ProductImageSerializer
+    permission_classes = [IsAdminOrReadOnly]
     http_method_names = ['get','post','patch','delete']
 
     def get_queryset(self):
         return ProductImage.objects.filter(product_id = self.kwargs['product_pk']).select_related('product')
+    
+    def get_serializer_context(self):
+        return {'product_id':self.kwargs['product_pk']}
 
 class CatagoryViewset(ModelViewSet):
     queryset = Catagory.objects.annotate(product_count=Count("product")).all()
