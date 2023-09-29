@@ -14,7 +14,6 @@ class CatagorySerializer(ModelSerializer):
     product_count = serializers.IntegerField(read_only=True)
 
 
-
 class ProductImageSerializer(ModelSerializer):
     class Meta:
         model = ProductImage
@@ -42,17 +41,6 @@ class ProductSerializer(ModelSerializer):
     def calculate_tax(self, product: Product):
         return product.price * Decimal(1.1)
 
-
-
-
-
-
-# __________________________________
-# def validate(self, data):
-#     if data['password'] != data['confirm_password']:
-#         return serializers.ValidationError('Pass word do not match')
-#     return data
-# ____________________________________
 
 
 class LikeSerializer(ModelSerializer):
@@ -151,6 +139,23 @@ class CustomerSerializer(ModelSerializer):
     
 
 
+class OrderItemProdectsSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['title','price']
+
+
+class OrderItemsSerializer(ModelSerializer):
+    product = OrderItemProdectsSerializer()
+    class Meta:
+        model = OrderItem
+        fields = ['id','product','quantity']
 
 
 
+class OrderSerializer(ModelSerializer):
+    items = OrderItemsSerializer(read_only = True,many =True)
+    class Meta:
+        model = Order
+        fields = ['id','customer','placed_at','payment_status','items']
+        

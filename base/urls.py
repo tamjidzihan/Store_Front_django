@@ -3,13 +3,13 @@ from rest_framework_nested import routers
 from . import views
 
 
-
-
 router =routers.DefaultRouter()
 router.register('products',views.ProducViewset,basename='products')
 router.register('catagory',views.CatagoryViewset)
 router.register('cart',views.CartViewset)
 router.register('customer',views.CustomerViwset)
+router.register('order',views.OrderViewset,basename='order')
+
 
 
 product_router =  routers.NestedDefaultRouter(router,'products',lookup = 'product')
@@ -21,6 +21,8 @@ cart_router = routers.NestedDefaultRouter(router,'cart',lookup = 'cart')
 cart_router.register('cartitem',views.CartItemViewset,basename='cart-item')
 
 
+order_router = routers.NestedDefaultRouter(router,'order',lookup= 'order')
+order_router.register('orderitem',views.OrderItemViewset,basename='order-item')
 
 
 urlpatterns = [
@@ -28,13 +30,7 @@ urlpatterns = [
     path('',include(router.urls)),
     path('',include(product_router.urls)),
     path('',include(cart_router.urls)),
- 
 ]
-
-
-
-
-
 
 
 # urlpatterns = [
@@ -52,3 +48,4 @@ urlpatterns = [
     # path('catagory/<int:pk>', views.CatagoryDetail.as_view(),name='catagory-detail'),
     
 # ]
+

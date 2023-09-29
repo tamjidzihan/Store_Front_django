@@ -87,13 +87,17 @@ class LikeViewset(ModelViewSet):
 
 
 
-class CartViewset(CreateModelMixin,
-                  RetrieveModelMixin,
-                  DestroyModelMixin,
-                  GenericViewSet):
+# class CartViewset(CreateModelMixin,
+#                   RetrieveModelMixin,
+#                   DestroyModelMixin,
+#                   GenericViewSet):
+#     queryset = Cart.objects.prefetch_related('cartitem_set__product').all()
+#     serializer_class = CartSerializer
+
+
+class CartViewset(ModelViewSet):
     queryset = Cart.objects.prefetch_related('cartitem_set__product').all()
     serializer_class = CartSerializer
-
     
 
 class CartItemViewset(ModelViewSet):
@@ -136,7 +140,19 @@ class CustomerViwset(CreateModelMixin,
             return Response(serializer.data)
 
 
+class OrderItemViewset(ModelViewSet):
+    http_method_names = ['get','post','patch','delete']
+    serializer_class = OrderItemsSerializer
+    def get_queryset(self):
+        return OrderItem.objects.filter(order_id = self.kwargs['order_pk']).select_related('product')
 
+    def get_serializer_context(self):
+        return {'order_id':self.kwargs['order_pk']}
+
+
+class OrderViewset(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
 
 
