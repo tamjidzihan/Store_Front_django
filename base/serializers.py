@@ -54,10 +54,10 @@ class LikeSerializer(ModelSerializer):
 
 
 #custom serializers----------------------------------->
-class CartItemProductSerializer(ModelSerializer):
+class SimpleProductSerializer(ModelSerializer):
     class Meta:
         model = Product
-        fields = ['title','price']
+        fields = ['id','title','price']
 
 
 #custom serializers----------------------------------->
@@ -101,7 +101,7 @@ class UpdateCartItemSerializer(ModelSerializer):
 
 
 class CartItemSerializer(ModelSerializer):
-    product = CartItemProductSerializer()
+    product = SimpleProductSerializer()
     product_total_price = serializers.SerializerMethodField(method_name='calculate_total_price')
 
     def calculate_total_price(self,cart_item:CartItem):
@@ -117,9 +117,9 @@ class CartSerializer(ModelSerializer):
     cartitem_set = CartItemSerializer(read_only = True,many =True)
     id = serializers.UUIDField(read_only = True)
     
-    cart_item_total_price = serializers.SerializerMethodField(method_name='get_cart_item_total_price')
+    cartitem_total_price = serializers.SerializerMethodField(method_name='get_cartitem_total_price')
 
-    def get_cart_item_total_price(self,cart:Cart):
+    def get_cartitem_total_price(self,cart:Cart):
         total_price = []
         for items in cart.cartitem_set.all():
             total_price.append(items.quantity * items.product.price)
@@ -127,7 +127,7 @@ class CartSerializer(ModelSerializer):
 
     class Meta:
         model= Cart
-        fields = ['id','cartitem_set','cart_item_total_price']
+        fields = ['id','cartitem_set','cartitem_total_price']
 
 
 
@@ -139,14 +139,8 @@ class CustomerSerializer(ModelSerializer):
     
 
 
-class OrderItemProdectsSerializer(ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['title','price']
-
-
 class OrderItemsSerializer(ModelSerializer):
-    product = OrderItemProdectsSerializer()
+    product = SimpleProductSerializer()
     class Meta:
         model = OrderItem
         fields = ['id','product','quantity']
@@ -154,8 +148,18 @@ class OrderItemsSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-    items = OrderItemsSerializer(read_only = True,many =True)
+    items = OrderItemsSerializer(many =True,read_only = True)
+    total_price = serializers.SerializerMethodField(method_name='get_ordeitem_total_price')
+
+    def get_ordeitem_total_price(self,order:Order):
+        total_price = []
+        for items in order.items.all():
+            total_price.append(items.quantity * items.product.price)
+        return sum(total_price)
+
+
+
     class Meta:
         model = Order
-        fields = ['id','customer','placed_at','payment_status','items']
+        fields = ['id','customer','placed_at','payment_status','items','total_price']
         

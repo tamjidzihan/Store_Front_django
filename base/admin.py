@@ -60,7 +60,11 @@ class ProductAdmin(admin.ModelAdmin):
             messages.SUCCESS
         )
 
-
+@admin.register(models.ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display=['id','product','image']
+    autocomplete_fields = ['product']
+    list_per_page = 50
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
