@@ -3,14 +3,15 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 #####################################################################################
-
+from rest_framework import filters
+from django_filters import rest_framework as django_filters
 
 from django.db.models.aggregates import Count
 from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.decorators import action
-from rest_framework.viewsets import ModelViewSet,GenericViewSet
+from rest_framework.viewsets import ModelViewSet,GenericViewSet,ReadOnlyModelViewSet
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.response import Response
@@ -69,6 +70,20 @@ class CatagoryViewset(ModelViewSet):
         if Product.objects.filter(catagory_id = kwargs['pk']):
             return Response({"error": f"Catagory can not be deleted.Because it has Some product on it."},status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
+
+
+class CatagoryProductViewSet(ReadOnlyModelViewSet):
+    queryset = Catagory.objects.all()
+    serializer_class = CatagoryProductSerializer
+    # filter_backends = [django_filters.DjangoFilterBackend, filters.OrderingFilter]
+    # filterset_fields = ['id']
+    # ordering_fields = ['title']
+
+    def get_queryset(self):
+        catagory_id = self.kwargs.get('catagory_id')
+        if catagory_id:
+            return Product.objects.filter(catagory_id=catagory_id)
+        return Catagory.objects.all()
 
 
 class LikeViewset(ModelViewSet):

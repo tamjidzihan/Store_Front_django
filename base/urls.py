@@ -9,6 +9,7 @@ router.register('catagory',views.CatagoryViewset)
 router.register('cart',views.CartViewset)
 router.register('customer',views.CustomerViwset)
 router.register('order',views.OrderViewset,basename='order')
+router.register('catagoryproduct',views.CatagoryProductViewSet, basename='catagoryproduct')
 
 
 

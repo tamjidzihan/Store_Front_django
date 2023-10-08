@@ -3,16 +3,44 @@ from rest_framework.serializers import ModelSerializer
 from decimal import Decimal
 from .models import *
 
+class ProductImageSerializer(ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields =  ['id','image']
+
+    def validate_product_id(self, value):
+        if not Product.objects.filter(pk = value).exists():
+            raise serializers.ValidationError('Invalide query')
+        return value
+    
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return ProductImage.objects.create(product_id = product_id,**validated_data)
+    
+#custom serializers----------------------------------->
+class SimpleProductSerializer(ModelSerializer):
+    images = ProductImageSerializer(many = True,read_only= True)
+    class Meta:
+        model = Product
+        fields = ['id','title','price','images']
 
 class CatagorySerializer(ModelSerializer):
+    feature_product = serializers.StringRelatedField()
+    product_count = serializers.IntegerField(read_only=True)
     class Meta:
         model = Catagory
         fields = ["id", "title", "feature_product", "product_count"]
         read_only_fields = ["product_count"]
 
-    feature_product = serializers.StringRelatedField()
-    product_count = serializers.IntegerField(read_only=True)
+    
 
+
+class CatagoryProductSerializer(serializers.ModelSerializer):
+    products = SimpleProductSerializer(many=True, read_only=True,source="product_set")
+
+    class Meta:
+        model = Catagory
+        fields = ["id", "title", "products"]
 
 class ProductImageSerializer(ModelSerializer):
     class Meta:
@@ -53,11 +81,7 @@ class LikeSerializer(ModelSerializer):
         return Like.objects.create(product_id = product_id,**validated_data)
 
 
-#custom serializers----------------------------------->
-class SimpleProductSerializer(ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id','title','price']
+
 
 
 #custom serializers----------------------------------->
