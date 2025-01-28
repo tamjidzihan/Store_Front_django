@@ -120,30 +120,30 @@ CORS_ALLOW_HEADERS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 # #for local database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'ecom',
-#         'USER': 'postgres',
-#         'PASSWORD': 'tamjid2014',
-#         'HOST': 'localhost',
-#         'PORT': '5432',        
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'storefront',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',        
+    }
+}
+
 
 # For Store_front website:
-
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'store_front',
-    'USER': 'tamjidzihan',
-    'PASSWORD': '70rXHvmyIYDg',
-    'HOST': 'ep-old-snow-36520072.ap-southeast-1.aws.neon.tech',
-    'PORT': '5432',
-    'OPTIONS': {'sslmode': 'require'},
-  }
-}
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'store_front',
+#     'USER': 'tamjidzihan',
+#     'PASSWORD': '70rXHvmyIYDg',
+#     'HOST': 'ep-old-snow-36520072.ap-southeast-1.aws.neon.tech',
+#     'PORT': '5432',
+#     'OPTIONS': {'sslmode': 'require'},
+#   }
+# }
 
 
 
