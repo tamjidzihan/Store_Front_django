@@ -126,32 +126,6 @@ DATABASES = {
 }
 
 
-# For Store_front website:
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql',
-#     'NAME': 'store_front',
-#     'USER': 'tamjidzihan',
-#     'PASSWORD': '70rXHvmyIYDg',
-#     'HOST': 'ep-old-snow-36520072.ap-southeast-1.aws.neon.tech',
-#     'PORT': '5432',
-#     'OPTIONS': {'sslmode': 'require'},
-#   }
-# }
-
-
-# # for cloude database - neon
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql',
-#     'NAME': 'ecom',
-#     'USER': 'tamjidzihan1',
-#     'PASSWORD': 'FvfCpEGD65ko',
-#     'HOST': 'ep-long-cherry-40253582.ap-southeast-1.aws.neon.tech',
-#     'PORT': '5432',
-#   }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
